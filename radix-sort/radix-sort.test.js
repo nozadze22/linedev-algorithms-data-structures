@@ -1,8 +1,39 @@
+function getDigit(number, place, longestNumber) {
+  const string = number.toString(); // '20'
+  const size = string.length; // 2
+  const mod = longestNumber - size; // 4 - 2 = 2
+  return string[place - mod] || 0; // '20'[3 - 2] = 0
+}
+
+// 20 3 4
+
+function getLongestNumber(array) {
+  let longest = 0;
+  for (let i = 0; i < array.length; i++) {
+    const currentLength = array[i].toString().length;
+    longest = currentLength > longest ? currentLength : longest;
+  }
+  return longest;
+}
+
 function radixSort(array) {
-  // find longest number -> helper
-  // create 10 buckets to store digits
-  // create helper to get digits
-  // put digit by digit in bucket and after move out
+  const longestNumber = getLongestNumber(array);
+  const buckets = new Array(10).fill().map(() => []);
+
+  for (let i = longestNumber - 1; i >= 0; i--) {
+    while (array.length) {
+      const curent = array.shift();
+      buckets[getDigit(curent, i, longestNumber)].push(curent); // 10 buckets
+    }
+
+    for (let j = 0; j < 10; j++) {
+      while (buckets[j].length) {
+        array.push(buckets[j].shift());
+      }
+    }
+  }
+
+  return array;
 }
 
 describe("radix sort", function () {
